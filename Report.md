@@ -151,6 +151,80 @@ Mine placement was improved by accepting a `java.util.Random` object as a constr
 
 This analysis demonstrated that while Solution 2 was a substantial improvement, achieving full testability across all required testing techniques (path testing, data flow, integration testing, boundary value, equivalence class, decision table, state transition, and use case testing) required a complete MVC separation. This insight directly informed the design of our final solution (Section 3.3).
 
+
+### 3.3	Final Solution
+
+Our final solution implements a strict Model-View-Controller (MVC) architecture, addressing the limitations identified in Solution 2 by completely decoupling input handling, display rendering, and game logic. This "Strict MVC" approach ensures that each component can be tested in isolation, providing full coverage across all required testing techniques.
+
+The table below summarizes why this solution was selected over the previous iterations:
+
+| Evaluation Criteria          | Solution 1 (Monolithic) | Solution 2 (Partial MVC) | Final Solution (Strict MVC) |
+|------------------------------|:-----------------------:|:------------------------:|:---------------------------:|
+| Isolated Model Testing       | ✗                       | ✓                        | ✓                           |
+| Isolated View Testing        | ✗                       | ✗                        | ✓                           |
+| Isolated Controller Testing  | ✗                       | ✗                        | ✓                           |
+| Deterministic Tests          | ✗                       | ✓                        | ✓                           |
+| Boundary/Equivalence Testing | Poor                    | Fair                     | Excellent (Input isolated)  |
+| State Transition Testing     | Poor                    | Fair                     | Excellent (State in Model)  |
+| Integration Test Boundaries  | 0                       | 1                        | 3 (M↔V, M↔C, C↔V)           |
+| Overall MVC Compliance       | None                    | Partial                  | Full                        |
+
+#### 3.3.1	Components
+
+The final architecture consists of three core components, each with a distinct responsibility and dedicated testing strategy:
+
+1.  **MinesweeperModel**:
+    *   **Purpose**: Manages the internal game state, including the 2D grid of cells, mine placement (using a seeded random generator), and logic for revealing cells or flagging mines.
+    *   **Testing**: Focused on **Path Testing** and **Data Flow Testing** for the `revealCell` and `countMines` methods. **State Transition Testing** was used to verify movements between "Playing," "Won," and "Lost" states.
+
+2.  **MinesweeperView**:
+    *   **Purpose**: Handles all output to the command line. It interprets the model's state and renders the visual grid, score, and status messages to the user.
+    *   **Testing**: Verified through **Integration Testing** with the Controller and Model to ensure that state changes are accurately reflected in the visual output.
+
+3.  **MinesweeperController**:
+    *   **Purpose**: Orchestrates the interaction between the user, the model, and the view. It parses user input (commands like `reveal 5 5` or `flag 2 3`) and updates the model accordingly.
+    *   **Testing**: Subjected to rigorous **Boundary Value Analysis** and **Equivalence Class Partitioning** to handle invalid coordinates, malformed strings, and edge-of-board inputs.
+
+**Block Diagram of Connectivity:**
+
+```mermaid
+graph TD
+    User((User)) -->|Input| Controller[MinesweeperController]
+    Controller -->|Update State| Model[MinesweeperModel]
+    Model -->|Notify/State Data| View[MinesweeperView]
+    View -->|Render Output| User
+    Controller -->|Request Render| View
+```
+*Figure 4: Connectivity and interaction between components in the Strict MVC architecture.*
+
+#### 3.3.2	Environmental, Societal, Safety, and Economic Considerations
+
+Our engineering design took into account the following constraints:
+
+*   **Economic Factors**: The application is designed for minimal hardware requirements, utilizing the Java Runtime Environment and CLI. This reduces development and maintenance costs while ensuring compatibility across low-cost hardware.
+*   **Societal Impacts**: By providing a simple, accessible version of a classic logic puzzle, the project promotes cognitive stimulation and digital literacy without the need for high-end graphical processing units.
+*   **Reliability and Safety**: To ensure the design is reliable and safe to use, we implemented comprehensive input validation and exception handling in the Controller. Deterministic behavior via seeded random generation ensures that the application behaves predictably during both testing and gameplay.
+*   **Sustainability and Environmental Factors**: As a text-based CLI application, the energy consumption required for rendering is significantly lower than that of GUI-based applications, aligning with "Green Computing" principles by reducing the carbon footprint of the software.
+
+#### 3.3.3	Test Cases and results
+
+To verify the prototype, we designed several test suites using JUnit:
+
+*   **Unit Test Suite**: Tested individual methods in the `MinesweeperModel` and `MinesweeperController`. This included decision table testing for win/loss conditions and path testing for the grid generation logic.
+*   **Integration Test Suite**: Verified the communication between the Model, View, and Controller. Specifically, we tested that the Controller correctly updates the Model and triggers the View to refresh.
+*   **Use Case Test Suite**: Followed standard user workflows (e.g., starting a game, revealing non-mine cells, flagging all mines, and winning) to ensure end-to-end functionality.
+
+**Results**: All test suites were executed successfully. The use of a seeded random generator allowed for 100% repeatable results, confirming that all core game mechanics function as specified in the design requirements.
+
+#### 3.3.4	Limitations
+
+While the strict MVC architecture provides excellent testability, the product has some limitations:
+
+1.  **CLI Interface**: The lack of a Graphical User Interface (GUI) may make it less appealing to users accustomed to modern visual standards.
+2.  **No Persistence**: Currently, the application does not support saving or loading game states; all progress is lost when the application is closed.
+3.  **Fixed Difficulty**: The current prototype has a fixed grid size and mine density, which limits replayability for advanced users compared to versions with adjustable difficulty levels.
+4.  **No Mouse Support**: As a pure CLI application, user input is limited to text commands, which can be slower than mouse-based interactions.
+
 ## Team Members
 
 <div align="center">
@@ -162,3 +236,4 @@ This analysis demonstrated that while Solution 2 was a substantial improvement, 
 | Luka Dundjerovic         | 200494589  |
 
 </div>
+
