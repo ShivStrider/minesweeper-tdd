@@ -1,4 +1,4 @@
-# 💣 MineSweeper CLI - Report
+# MineSweeper CLI - Report
 
 ## 1. Introduction
 
