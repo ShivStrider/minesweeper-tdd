@@ -6,30 +6,30 @@ A command-line Minesweeper game built with **Test-Driven Development (TDD)** and
 
 ```
 minesweeper-tdd/
-├── src/                              # Application source (MVC structure)
-│   ├── App.java                      # Entry point: wires MVC components
+├── src/                                # Application source (MVC structure)
+│   ├── App.java                        # Entry point: wires MVC components
 │   ├── model/
-│   │   └── MinesweeperModel.java     # Model: game logic, state, data
+│   │   └── MinesweeperModel.java       # Model: game logic, state, data
 │   ├── view/
-│   │   └── MinesweeperView.java      # View: CLI rendering and display
+│   │   └── MinesweeperView.java        # View: CLI rendering and display
 │   └── controller/
-│       └── MinesweeperController.java # Controller: input handling, game loop
-├── test/                             # JUnit 4 test suites
-│   ├── MinesweeperModelTest.java     # Path testing, data flow testing, unit tests
+│       └── MinesweeperController.java  # Controller: input handling, game loop
+├── test/                               # JUnit test suites
+│   ├── MinesweeperModelTest.java       # Path testing, data flow testing, unit tests
 │   ├── MinesweeperIntegrationTest.java # Bottom-up integration tests
 │   └── MinesweeperValidationTest.java  # BVA, EC, decision table, state, use case
-├── lib/                              # Dependencies
+├── lib/                                # Dependencies
 │   ├── junit-4.13.2.jar
 │   └── hamcrest-core-1.3.jar
-├── legacy/                           # Solution 1 reference code
+├── legacy/                             # Solution 1 reference code
 │   └── Minesweeper.java
-├── docs/                             # Documentation and diagrams
+├── docs/                               # Documentation and diagrams
 │   ├── Report.md
 │   ├── Testing.md
 │   └── img/
-│       ├── use.png                   # Use Case Diagram
-│       ├── seq.png                   # Sequence Diagram
-│       └── class.webp                # Class Diagram
+│       ├── use.png                     # Use Case Diagram
+│       ├── seq.png                     # Sequence Diagram
+│       └── class.webp                  # Class Diagram
 └── README.md
 ```
 
